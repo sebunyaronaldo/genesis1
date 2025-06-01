@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "744042005137",
+    "project_id": "zzeeta",
+    "storage_bucket": "zzeeta.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744042005137:android:83861a32369a3641203530",
+        "android_client_info": {
+          "package_name": "com.example.genesis1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744042005137-3f3essp40tsu78gn1etmb6jocd20g8ur.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtYYx8yw0PJQSyo2lMA_3PZDK5K_JhKFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744042005137-3f3essp40tsu78gn1etmb6jocd20g8ur.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
