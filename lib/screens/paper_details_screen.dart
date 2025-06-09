@@ -1,71 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
-import 'dart:io';
+import 'pdf_viewer_screen.dart';
 
-class PaperDetailsScreen extends StatefulWidget {
-  final Map<String, dynamic> paper;
+class PaperDetailsScreen extends StatelessWidget {
+  final Map<String, dynamic> paperData;
 
-  const PaperDetailsScreen({super.key, required this.paper});
-
-  @override
-  State<PaperDetailsScreen> createState() => _PaperDetailsScreenState();
-}
-
-class _PaperDetailsScreenState extends State<PaperDetailsScreen> {
-  bool _isLoading = true;
-  String? _localPath;
-
-  @override
-  void initState() {
-    super.initState();
-    _downloadAndOpenPDF();
-  }
-
-  Future<void> _downloadAndOpenPDF() async {
-    try {
-      final url = widget.paper['url'] as String;
-      final response = await http.get(Uri.parse(url));
-      
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/${widget.paper['title']}');
-      
-      await file.writeAsBytes(response.bodyBytes);
-      
-      if (!mounted) return;
-      setState(() {
-        _localPath = file.path;
-        _isLoading = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading PDF: $e')),
-      );
-    }
-  }
+  const PaperDetailsScreen({
+    super.key,
+    required this.paperData,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.paper['title'] ?? 'Paper Details'),
+        title: Text(paperData['title'] ?? 'Paper Details'),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _localPath == null
-              ? const Center(child: Text('Error loading PDF'))
-              : PDFView(
-                  filePath: _localPath!,
-                  enableSwipe: true,
-                  swipeHorizontal: false,
-                  autoSpacing: true,
-                  pageFling: true,
-                  pageSnap: true,
-                  fitPolicy: FitPolicy.BOTH,
-                  preventLinkNavigation: false,
-                ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              paperData['title'] ?? 'Untitled',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              paperData['subject'] ?? 'No subject',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            if (paperData['description'] != null) ...[
+              Text(
+                'Description',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(paperData['description']),
+              const SizedBox(height: 16),
+            ],
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PdfViewerScreen(
+                      paper: paperData,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('View Paper'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 } 
